@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Speed Math Trainer</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel2: #1f2937;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --good: #22c55e;
+      --bad: #ef4444;
+      --accent: #38bdf8;
+      --warn: #f59e0b;
+      --border: rgba(255,255,255,.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b, var(--bg));
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+    .app { width: min(980px, 100%); display: grid; gap: 14px; }
+    header, .card {
+      background: rgba(17,24,39,.92);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+    header { padding: 18px; display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
+    h1 { margin: 0; font-size: clamp(1.4rem, 4vw, 2.3rem); }
+    .subtitle { color: var(--muted); margin-top: 4px; }
+    .card { padding: 18px; }
+    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+    label { color: var(--muted); font-size: .9rem; display: grid; gap: 6px; }
+    select, input, button {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+      background: var(--panel2);
+      color: var(--text);
+    }
+    button { cursor: pointer; font-weight: 800; }
+    button.primary { background: linear-gradient(135deg, #0284c7, #22c55e); border: 0; }
+    button.ghost { background: transparent; }
+    .game { text-align: center; display: grid; gap: 16px; }
+    .problem {
+      font-size: clamp(2.8rem, 11vw, 7rem);
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      line-height: 1;
+      padding: 18px 4px;
+    }
+    .answerRow { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    #answer {
+      width: min(360px, 100%);
+      font-size: 2rem;
+      text-align: center;
+      font-weight: 900;
+    }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .stat { background: rgba(255,255,255,.06); border: 1px solid var(--border); border-radius: 16px; padding: 12px; }
+    .stat b { display: block; font-size: 1.4rem; }
+    .stat span { color: var(--muted); font-size: .8rem; }
+    .keypad { display: grid; grid-template-columns: repeat(3, minmax(70px, 1fr)); gap: 10px; max-width: 360px; margin: 0 auto; }
+    .keypad button { font-size: 1.5rem; min-height: 58px; background: #0b1220; }
+    .history { max-height: 220px; overflow: auto; display: grid; gap: 8px; }
+    .row { display: flex; justify-content: space-between; gap: 8px; padding: 9px 11px; border-radius: 12px; background: rgba(255,255,255,.055); }
+    .ok { color: var(--good); }
+    .no { color: var(--bad); }
+    .hidden { display: none; }
+    @media (max-width: 680px) {
+      body { padding: 10px; }
+      header, .card { border-radius: 16px; padding: 14px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .problem { font-size: clamp(3rem, 16vw, 5.4rem); }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div>
+        <h1>Speed Math Trainer</h1>
+        <div class="subtitle">Auto-check answers, train weak facts, and use the phone-friendly keypad.</div>
+      </div>
+      <button class="ghost" id="toggleSettings">Hide Settings</button>
+    </header>
+
+    <section class="card" id="settings">
+      <div class="controls">
+        <label>Operation
+          <select id="operation">
+            <option value="mixed">Mixed</option>
+            <option value="+">Addition</option>
+            <option value="-">Subtraction</option>
+            <option value="*">Multiplication</option>
+            <option value="/">Division</option>
+          </select>
+        </label>
+        <label>Number of terms
+          <select id="terms"><option>2</option><option>3</option><option>4</option></select>
+        </label>
+        <label>Minimum
+          <input id="minNum" type="number" value="1" inputmode="numeric" />
+        </label>
+        <label>Maximum
+          <input id="maxNum" type="number" value="12" inputmode="numeric" />
+        </label>
+        <label>Session length
+          <input id="sessionLen" type="number" value="25" inputmode="numeric" />
+        </label>
+        <label>Mode
+          <select id="mode">
+            <option value="normal">Normal</option>
+            <option value="adaptive">Adaptive weakness targeting</option>
+            <option value="missing">Missing term</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="card game">
+      <div class="stats">
+        <div class="stat"><b id="score">0</b><span>Correct</span></div>
+        <div class="stat"><b id="attempts">0</b><span>Attempts</span></div>
+        <div class="stat"><b id="avgTime">0.00s</b><span>Average</span></div>
+        <div class="stat"><b id="streak">0</b><span>Streak</span></div>
+      </div>
+      <div class="problem" id="problem">Press Start</div>
+      <div class="answerRow">
+        <input id="answer" autocomplete="off" inputmode="none" placeholder="answer" />
+        <button class="primary" id="startBtn">Start</button>
+        <button id="skipBtn">Skip</button>
+      </div>
+      <div class="keypad" id="keypad">
+        <button>7</button><button>8</button><button>9</button>
+        <button>4</button><button>5</button><button>6</button>
+        <button>1</button><button>2</button><button>3</button>
+        <button>-</button><button>0</button><button data-action="back">⌫</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 style="margin-top:0">Recent Problems</h2>
+      <div class="history" id="history"></div>
+    </section>
+  </main>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const state = { answer: null, text: '', startedAt: 0, correct: 0, attempts: 0, streak: 0, totalMs: 0, history: [], weak: new Map() };
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function pickOp() { const op = $('operation').value; return op === 'mixed' ? ['+','-','*','/'][rand(0,3)] : op; }
+    function makeProblem() {
+      const min = Number($('minNum').value || 1), max = Number($('maxNum').value || 12);
+      let op = pickOp();
+      let nums = Array.from({length: Number($('terms').value || 2)}, () => rand(min, max));
+      if (op === '/') { const b = rand(Math.max(1,min), Math.max(1,max)); const q = rand(min, max); nums = [b*q, b]; }
+      if (op === '-') nums = nums.sort((a,b) => b-a);
+      let ans = nums[0];
+      for (let i=1; i<nums.length; i++) {
+        if (op === '+') ans += nums[i];
+        if (op === '-') ans -= nums[i];
+        if (op === '*') ans *= nums[i];
+        if (op === '/') ans /= nums[i];
+      }
+      let text = nums.join(' ' + (op === '*' ? '×' : op === '/' ? '÷' : op) + ' ');
+      if ($('mode').value === 'missing' && nums.length === 2) {
+        const hideFirst = Math.random() < .5;
+        text = hideFirst ? `? ${op === '*' ? '×' : op === '/' ? '÷' : op} ${nums[1]} = ${ans}` : `${nums[0]} ${op === '*' ? '×' : op === '/' ? '÷' : op} ? = ${ans}`;
+        ans = hideFirst ? nums[0] : nums[1];
+      }
+      state.answer = Number.isInteger(ans) ? ans : Number(ans.toFixed(2));
+      state.text = text;
+      state.startedAt = performance.now();
+      $('problem').textContent = text;
+      $('answer').value = '';
+      $('answer').focus();
+    }
+    function record(ok, given) {
+      const ms = performance.now() - state.startedAt;
+      state.attempts++;
+      if (ok) { state.correct++; state.streak++; state.totalMs += ms; } else { state.streak = 0; state.weak.set(state.text, (state.weak.get(state.text) || 0) + 1); }
+      state.history.unshift({ problem: state.text, given, answer: state.answer, ok, ms });
+      state.history = state.history.slice(0, 20);
+      render();
+      if (state.attempts >= Number($('sessionLen').value || 25)) $('problem').textContent = 'Session complete'; else makeProblem();
+    }
+    function render() {
+      $('score').textContent = state.correct;
+      $('attempts').textContent = state.attempts;
+      $('streak').textContent = state.streak;
+      $('avgTime').textContent = state.correct ? (state.totalMs / state.correct / 1000).toFixed(2) + 's' : '0.00s';
+      $('history').innerHTML = state.history.map(h => `<div class="row"><span>${h.problem} = ${h.answer}</span><b class="${h.ok ? 'ok':'no'}">${h.ok ? '✓':'✗'} ${ (h.ms/1000).toFixed(2)}s</b></div>`).join('');
+    }
+    function reset() { Object.assign(state, { answer:null, text:'', startedAt:0, correct:0, attempts:0, streak:0, totalMs:0, history:[] }); render(); makeProblem(); }
+    $('startBtn').onclick = reset;
+    $('skipBtn').onclick = makeProblem;
+    $('answer').addEventListener('input', e => {
+      const val = e.target.value.trim();
+      if (val !== '' && Number(val) === state.answer) record(true, val);
+    });
+    $('answer').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && state.answer !== null) record(Number($('answer').value) === state.answer, $('answer').value);
+    });
+    $('keypad').addEventListener('click', e => {
+      if (e.target.tagName !== 'BUTTON') return;
+      const action = e.target.dataset.action;
+      const input = $('answer');
+      input.value = action === 'back' ? input.value.slice(0,-1) : input.value + e.target.textContent;
+      input.dispatchEvent(new Event('input'));
+      input.focus();
+    });
+    $('toggleSettings').onclick = () => {
+      $('settings').classList.toggle('hidden');
+      $('toggleSettings').textContent = $('settings').classList.contains('hidden') ? 'Show Settings' : 'Hide Settings';
+    };
+  </script>
+</body>
+</html>

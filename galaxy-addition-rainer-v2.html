@@ -5,106 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Galaxy Addition Trainer v2</title>
   <style>
-    :root{
-      --bg1:#070015;--bg2:#10164a;--panel:rgba(255,255,255,.10);
-      --line:rgba(255,255,255,.18);--glow:#78e7ff;--pink:#ff55d8;
-      --gold:#ffe76a;--green:#67ff9a;--bad:#ff5574;
-    }
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    body{
-      margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,sans-serif;
-      color:white;background:
-        radial-gradient(circle at 20% 20%,rgba(255,85,216,.30),transparent 30%),
-        radial-gradient(circle at 80% 10%,rgba(120,231,255,.25),transparent 30%),
-        linear-gradient(135deg,var(--bg1),var(--bg2) 55%,#02020b);
-      overflow:hidden;
-    }
-    .stars{position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(#fff 1px,transparent 1px),radial-gradient(var(--glow) 1px,transparent 1px);background-size:70px 70px,130px 130px;animation:drift 55s linear infinite;opacity:.75}
-    @keyframes drift{to{transform:translate(-220px,170px)}}
-    main{position:relative;z-index:1;min-height:100vh;display:grid;place-items:center;padding:14px}
-    .panel{width:min(920px,98vw);max-height:98vh;overflow:auto;border:1px solid var(--line);border-radius:30px;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.06));box-shadow:0 0 40px rgba(120,231,255,.20);backdrop-filter:blur(16px);padding:clamp(16px,3vw,28px);text-align:center}
-    h1{margin:0;font-size:clamp(2rem,5vw,3.5rem);text-shadow:0 0 14px var(--glow),0 0 28px var(--pink)}
-    .subtitle{margin:6px 0 18px;color:rgba(255,255,255,.75)}
-    .modes,.ranges,.stats,.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:12px 0}
-    button{border:0;color:white;font-weight:900;cursor:pointer;border-radius:999px;padding:12px 16px;background:rgba(0,0,0,.32);border:1px solid var(--line);box-shadow:0 0 14px rgba(120,231,255,.14)}
-    button.on{background:linear-gradient(90deg,rgba(255,85,216,.65),rgba(120,231,255,.45));box-shadow:0 0 22px rgba(255,85,216,.35)}
-    label{display:grid;gap:4px;text-align:left;font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.72)}
-    input[type=number]{width:92px;padding:11px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.35);color:white;font-size:1.05rem;font-weight:800;text-align:center}
-    .stat{min-width:120px;padding:10px 14px;border-radius:18px;background:rgba(0,0,0,.28);border:1px solid var(--line)}
-    .stat b{display:block;color:var(--gold);font-size:1.25rem}.stat span{font-size:.72rem;opacity:.75;text-transform:uppercase;letter-spacing:.08em}
-    .problem-card{position:relative;margin:18px auto 12px;width:min(520px,100%);min-height:170px;border-radius:30px;display:grid;place-items:center;background:radial-gradient(circle,rgba(120,231,255,.18),rgba(255,85,216,.08),rgba(0,0,0,.20));border:1px solid var(--line);overflow:hidden}
-    .problem-card:before{content:"";position:absolute;width:260px;height:260px;border:1px dashed rgba(255,255,255,.20);border-radius:50%;animation:spin 8s linear infinite}.problem-card:after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:var(--green);box-shadow:0 0 22px var(--green);transform:translate(0,-130px);animation:spin 8s linear infinite}@keyframes spin{to{rotate:360deg}}
-    .problem{position:relative;z-index:1;font-size:clamp(3.5rem,11vw,7rem);font-weight:950;text-shadow:0 0 18px var(--glow),0 0 36px rgba(255,85,216,.55)}
-    .answer{width:min(300px,90%);margin:auto;padding:12px 20px;min-height:70px;border-radius:999px;border:2px solid rgba(120,231,255,.62);background:rgba(0,0,0,.48);font-size:2.2rem;font-weight:950;box-shadow:0 0 20px rgba(120,231,255,.25)}
-    .keypad{width:min(430px,96%);margin:15px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.key{font-size:1.45rem;border-radius:22px;padding:16px 0}.key.target{background:linear-gradient(145deg,rgba(103,255,154,.52),rgba(120,231,255,.34));box-shadow:0 0 26px rgba(103,255,154,.38);transform:scale(1.06)}.key.near{background:linear-gradient(145deg,rgba(255,231,106,.33),rgba(120,231,255,.18))}.danger{background:linear-gradient(145deg,rgba(255,85,116,.45),rgba(0,0,0,.24))}
-    .feedback{min-height:34px;margin-top:12px;font-size:1.08rem;font-weight:900;color:var(--green);text-shadow:0 0 12px var(--green)}
-    .note{margin-top:12px;color:rgba(255,255,255,.62);font-size:.86rem}
-    @media(max-width:680px){body{overflow:auto}.stats{display:grid;grid-template-columns:repeat(2,1fr)}.stat{min-width:0}.panel{max-height:none}}
+    :root{--bg1:#070015;--bg2:#10164a;--line:rgba(255,255,255,.18);--glow:#78e7ff;--pink:#ff55d8;--gold:#ffe76a;--green:#67ff9a;--bad:#ff5574}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:white;background:radial-gradient(circle at 20% 20%,rgba(255,85,216,.30),transparent 30%),radial-gradient(circle at 80% 10%,rgba(120,231,255,.25),transparent 30%),linear-gradient(135deg,var(--bg1),var(--bg2) 55%,#02020b);overflow:hidden}.stars{position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(#fff 1px,transparent 1px),radial-gradient(var(--glow) 1px,transparent 1px);background-size:70px 70px,130px 130px;animation:drift 55s linear infinite;opacity:.75}@keyframes drift{to{transform:translate(-220px,170px)}}main{position:relative;z-index:1;min-height:100vh;display:grid;place-items:center;padding:14px}.panel{width:min(1100px,98vw);max-height:98vh;overflow:auto;border:1px solid var(--line);border-radius:30px;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.06));box-shadow:0 0 40px rgba(120,231,255,.20);backdrop-filter:blur(16px);padding:clamp(16px,3vw,28px);text-align:center}h1{margin:0;font-size:clamp(2rem,5vw,3.5rem);text-shadow:0 0 14px var(--glow),0 0 28px var(--pink)}.subtitle{margin:6px 0 18px;color:rgba(255,255,255,.75)}.modes,.ranges,.stats,.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:12px 0}button{border:0;color:white;font-weight:900;cursor:pointer;border-radius:999px;padding:12px 16px;background:rgba(0,0,0,.32);border:1px solid var(--line);box-shadow:0 0 14px rgba(120,231,255,.14)}button.on{background:linear-gradient(90deg,rgba(255,85,216,.65),rgba(120,231,255,.45));box-shadow:0 0 22px rgba(255,85,216,.35)}label{display:grid;gap:4px;text-align:left;font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.72)}input[type=number]{width:92px;padding:11px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.35);color:white;font-size:1.05rem;font-weight:800;text-align:center}.stat{min-width:120px;padding:10px 14px;border-radius:18px;background:rgba(0,0,0,.28);border:1px solid var(--line)}.stat b{display:block;color:var(--gold);font-size:1.25rem}.stat span{font-size:.72rem;opacity:.75;text-transform:uppercase;letter-spacing:.08em}.grid{display:grid;grid-template-columns:minmax(300px,1fr) minmax(320px,440px);gap:18px;align-items:start}.problem-card{position:relative;margin:18px auto 12px;width:min(520px,100%);min-height:170px;border-radius:30px;display:grid;place-items:center;background:radial-gradient(circle,rgba(120,231,255,.18),rgba(255,85,216,.08),rgba(0,0,0,.20));border:1px solid var(--line);overflow:hidden}.problem-card:before{content:"";position:absolute;width:260px;height:260px;border:1px dashed rgba(255,255,255,.20);border-radius:50%;animation:spin 8s linear infinite}.problem-card:after{content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:var(--green);box-shadow:0 0 22px var(--green);transform:translate(0,-130px);animation:spin 8s linear infinite}@keyframes spin{to{rotate:360deg}}.problem{position:relative;z-index:1;font-size:clamp(3.5rem,11vw,7rem);font-weight:950;text-shadow:0 0 18px var(--glow),0 0 36px rgba(255,85,216,.55)}.answer{width:min(300px,90%);margin:auto;padding:12px 20px;min-height:70px;border-radius:999px;border:2px solid rgba(120,231,255,.62);background:rgba(0,0,0,.48);font-size:2.2rem;font-weight:950;box-shadow:0 0 20px rgba(120,231,255,.25)}.keypad{width:min(430px,96%);margin:15px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.key{font-size:1.45rem;border-radius:22px;padding:16px 0}.key.target{background:linear-gradient(145deg,rgba(103,255,154,.52),rgba(120,231,255,.34));box-shadow:0 0 26px rgba(103,255,154,.38);transform:scale(1.06)}.key.near{background:linear-gradient(145deg,rgba(255,231,106,.33),rgba(120,231,255,.18))}.danger{background:linear-gradient(145deg,rgba(255,85,116,.45),rgba(0,0,0,.24))}.feedback{min-height:34px;margin-top:12px;font-size:1.08rem;font-weight:900;color:var(--green);text-shadow:0 0 12px var(--green)}.note{margin-top:12px;color:rgba(255,255,255,.62);font-size:.86rem}.heat-panel{padding:14px;border-radius:24px;background:rgba(0,0,0,.24);border:1px solid var(--line);box-shadow:inset 0 0 22px rgba(120,231,255,.08)}.heat-title{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.heat-title h2{font-size:1.1rem;margin:0;text-shadow:0 0 12px var(--pink)}.legend{font-size:.72rem;opacity:.8}.heatmap{display:grid;grid-template-columns:26px repeat(10,1fr);gap:4px}.axis,.cell{height:30px;display:grid;place-items:center;border-radius:8px;font-size:.72rem;font-weight:900}.axis{color:rgba(255,255,255,.72)}.cell{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.09);color:white;text-shadow:0 1px 2px #000}.cell.current{outline:2px solid white}.cell.good{background:rgba(103,255,154,.35)}.cell.ok{background:rgba(255,231,106,.42)}.cell.weak{background:rgba(255,85,216,.45)}.cell.bad{background:rgba(255,85,116,.62)}.weak-list{text-align:left;margin-top:12px;font-size:.88rem;color:rgba(255,255,255,.86)}.weak-list b{color:var(--gold)}.weak-list ol{margin:6px 0 0 22px;padding:0}.weak-list li{margin:4px 0}.shake{animation:shake .18s linear}@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}@media(max-width:860px){body{overflow:auto}.panel{max-height:none}.grid{grid-template-columns:1fr}.stats{display:grid;grid-template-columns:repeat(2,1fr)}.stat{min-width:0}}
   </style>
 </head>
-<body>
-  <div class="stars"></div>
-  <main>
-    <section class="panel">
-      <h1>Galaxy Math v2</h1>
-      <p class="subtitle">Speed-focused math practice with custom ranges and highlighted answer digits.</p>
-
-      <div class="modes">
-        <button id="addBtn" class="on">➕ Addition</button>
-        <button id="multBtn">✖️ Multiplication</button>
-        <button id="mixedBtn">🔀 Mixed</button>
-      </div>
-
-      <div class="ranges">
-        <label>Min A <input id="minA" type="number" value="0"></label>
-        <label>Max A <input id="maxA" type="number" value="9"></label>
-        <label>Min B <input id="minB" type="number" value="0"></label>
-        <label>Max B <input id="maxB" type="number" value="9"></label>
-        <button id="applyBtn">Apply Range</button>
-      </div>
-
-      <div class="stats">
-        <div class="stat"><b id="score">0</b><span>Score</span></div>
-        <div class="stat"><b id="streak">0</b><span>Streak</span></div>
-        <div class="stat"><b id="avg">0.00s</b><span>Avg Speed</span></div>
-        <div class="stat"><b id="best">--</b><span>Best</span></div>
-      </div>
-
-      <div class="problem-card"><div id="problem" class="problem">0 + 0</div></div>
-      <div id="answerBox" class="answer">?</div>
-
-      <div id="keypad" class="keypad">
-        <button class="key" data-key="1">1</button><button class="key" data-key="2">2</button><button class="key" data-key="3">3</button>
-        <button class="key" data-key="4">4</button><button class="key" data-key="5">5</button><button class="key" data-key="6">6</button>
-        <button class="key" data-key="7">7</button><button class="key" data-key="8">8</button><button class="key" data-key="9">9</button>
-        <button class="key danger" data-key="back">⌫</button><button class="key" data-key="0">0</button><button class="key danger" data-key="clear">Clear</button>
-      </div>
-
-      <div id="feedback" class="feedback">Ready 🚀</div>
-      <div class="controls"><button id="newBtn">New Problem</button><button id="resetBtn">Restart</button></div>
-      <div class="note">Digits in the correct answer glow green. Nearby digits glow gold for fast targeting.</div>
-    </section>
-  </main>
-
-<script>
-const $=id=>document.getElementById(id);
-const problem=$('problem'),answerBox=$('answerBox'),feedback=$('feedback'),keypad=$('keypad');
-const scoreEl=$('score'),streakEl=$('streak'),avgEl=$('avg'),bestEl=$('best');
-const addBtn=$('addBtn'),multBtn=$('multBtn'),mixedBtn=$('mixedBtn');
-let mode='add',a=0,b=0,op='+',answer=0,typed='',started=performance.now(),score=0,streak=0,times=[];
-function n(id){return Number($(id).value)}
-function clampRanges(){for(const id of ['minA','maxA','minB','maxB']){if(!Number.isFinite(n(id)))$(id).value=0}if(n('minA')>n('maxA'))[$('minA').value,$('maxA').value]=[$('maxA').value,$('minA').value];if(n('minB')>n('maxB'))[$('minB').value,$('maxB').value]=[$('maxB').value,$('minB').value]}
-function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
-function setMode(m){mode=m;addBtn.classList.toggle('on',m==='add');multBtn.classList.toggle('on',m==='mult');mixedBtn.classList.toggle('on',m==='mixed');newProblem()}
-function newProblem(){clampRanges();a=rand(n('minA'),n('maxA'));b=rand(n('minB'),n('maxB'));op=mode==='add'?'+':mode==='mult'?'×':Math.random()<.5?'+':'×';answer=op==='+'?a+b:a*b;typed='';started=performance.now();problem.textContent=`${a} ${op} ${b}`;answerBox.textContent='?';feedback.textContent='Go fast ⚡';highlightKeys()}
-function highlightKeys(){const digits=String(Math.abs(answer)).split('');const near=new Set(digits.flatMap(d=>[String(Math.max(0,+d-1)),d,String(Math.min(9,+d+1))]));[...keypad.querySelectorAll('.key')].forEach(k=>{const v=k.dataset.key;k.classList.remove('target','near');if(digits.includes(v))k.classList.add('target');else if(near.has(v))k.classList.add('near')})}
-function updateStats(){scoreEl.textContent=score;streakEl.textContent=streak;if(times.length){const avg=times.reduce((s,t)=>s+t,0)/times.length;const best=Math.min(...times);avgEl.textContent=avg.toFixed(2)+'s';bestEl.textContent=best.toFixed(2)+'s'}else{avgEl.textContent='0.00s';bestEl.textContent='--'}}
+<body><div class="stars"></div><main><section class="panel"><h1>Galaxy Math v2</h1><p class="subtitle">Speed-focused math practice with custom ranges, adaptive difficulty, and weak-fact heatmaps.</p><div class="modes"><button id="addBtn" class="on">➕ Addition</button><button id="multBtn">✖️ Multiplication</button><button id="mixedBtn">🔀 Mixed</button><button id="adaptiveBtn" class="on">🎯 Adaptive ON</button></div><div class="ranges"><label>Min A <input id="minA" type="number" value="0"></label><label>Max A <input id="maxA" type="number" value="9"></label><label>Min B <input id="minB" type="number" value="0"></label><label>Max B <input id="maxB" type="number" value="9"></label><button id="applyBtn">Apply Range</button></div><div class="stats"><div class="stat"><b id="score">0</b><span>Score</span></div><div class="stat"><b id="streak">0</b><span>Streak</span></div><div class="stat"><b id="avg">0.00s</b><span>Avg Speed</span></div><div class="stat"><b id="best">--</b><span>Best</span></div><div class="stat"><b id="focus">New</b><span>Focus</span></div></div><div class="grid"><div><div id="card" class="problem-card"><div id="problem" class="problem">0 + 0</div></div><div id="answerBox" class="answer">?</div><div id="keypad" class="keypad"><button class="key" data-key="1">1</button><button class="key" data-key="2">2</button><button class="key" data-key="3">3</button><button class="key" data-key="4">4</button><button class="key" data-key="5">5</button><button class="key" data-key="6">6</button><button class="key" data-key="7">7</button><button class="key" data-key="8">8</button><button class="key" data-key="9">9</button><button class="key danger" data-key="back">⌫</button><button class="key" data-key="0">0</button><button class="key danger" data-key="clear">Clear</button></div><div id="feedback" class="feedback">Ready 🚀</div><div class="controls"><button id="newBtn">New Problem</button><button id="resetBtn">Restart</button></div><div class="note">Adaptive mode favors weak, slow, wrong, new, and stale facts. Correct answer digits glow green.</div></div><aside class="heat-panel"><div class="heat-title"><h2 id="heatTitle">🎯 Heatmap</h2><div class="legend">M mastered · O okay · W weak · X worst</div></div><div id="heatmap" class="heatmap"></div><div class="weak-list"><b id="weakTitle">Top weak facts:</b><ol id="weakList"></ol></div></aside></div></section></main><script>
+const $=id=>document.getElementById(id),problem=$('problem'),answerBox=$('answerBox'),feedback=$('feedback'),keypad=$('keypad'),card=$('card'),scoreEl=$('score'),streakEl=$('streak'),avgEl=$('avg'),bestEl=$('best'),focusEl=$('focus'),addBtn=$('addBtn'),multBtn=$('multBtn'),mixedBtn=$('mixedBtn'),adaptiveBtn=$('adaptiveBtn'),heatmap=$('heatmap'),weakList=$('weakList'),heatTitle=$('heatTitle'),weakTitle=$('weakTitle');
+let mode='add',adaptive=true,a=0,b=0,op='+',answer=0,typed='',started=performance.now(),score=0,streak=0,times=[],facts=[],lastKey='';
+function n(id){return Number($(id).value)}function clampRanges(){for(const id of ['minA','maxA','minB','maxB'])if(!Number.isFinite(n(id)))$(id).value=0;if(n('minA')>n('maxA'))[$('minA').value,$('maxA').value]=[$('maxA').value,$('minA').value];if(n('minB')>n('maxB'))[$('minB').value,$('maxB').value]=[$('maxB').value,$('minB').value]}function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}function key(o,x,y){return `${o}:${x}:${y}`}function calc(o,x,y){return o==='+'?x+y:x*y}function opName(){return mode==='add'?'Addition':mode==='mult'?'Multiplication':'Mixed'}
+function rebuildFacts(){clampRanges();facts=[];const ops=mode==='add'?['+']:mode==='mult'?['×']:['+','×'];for(const o of ops)for(let x=n('minA');x<=n('maxA');x++)for(let y=n('minB');y<=n('maxB');y++)facts.push({a:x,b:y,op:o,key:key(o,x,y),attempts:0,wrong:0,totalTime:0,lastSeen:0})}
+function factScore(f){const avg=f.attempts?f.totalTime/f.attempts:3.5;return 1+(f.wrong*3)+Math.max(0,avg-1.7)*2+(f.attempts<2?4:0)+(score-f.lastSeen>12?1.5:0)}function label(f){if(!f.attempts)return 'unknown';const avg=f.totalTime/f.attempts,miss=f.wrong/Math.max(1,f.attempts+f.wrong);if(miss>.35||avg>4)return'bad';if(f.wrong>0||avg>2.5)return'weak';if(avg>1.6)return'ok';return'good'}function mark(l){return l==='bad'?'X':l==='weak'?'W':l==='ok'?'O':l==='good'?'M':''}
+function pickFact(){let pool=facts.filter(f=>f.key!==lastKey);if(!pool.length)pool=facts;if(!adaptive)return pool[Math.floor(Math.random()*pool.length)];let sum=pool.reduce((s,f)=>s+factScore(f),0),r=Math.random()*sum;for(const f of pool){r-=factScore(f);if(r<=0)return f}return pool[0]}
+function currentFact(){return facts.find(f=>f.key===key(op,a,b))}function setMode(m){mode=m;addBtn.classList.toggle('on',m==='add');multBtn.classList.toggle('on',m==='mult');mixedBtn.classList.toggle('on',m==='mixed');lastKey='';rebuildFacts();newProblem()}
+function newProblem(){if(!facts.length)rebuildFacts();const f=pickFact();a=f.a;b=f.b;op=f.op;answer=calc(op,a,b);lastKey=f.key;typed='';started=performance.now();problem.textContent=`${a} ${op} ${b}`;answerBox.textContent='?';feedback.textContent='Go fast ⚡';focusEl.textContent=f.attempts<2?'New':f.wrong?'Weak':'Speed';highlightKeys();renderHeatmap()}
+function highlightKeys(){const digits=String(Math.abs(answer)).split(''),near=new Set(digits.flatMap(d=>[String(Math.max(0,+d-1)),d,String(Math.min(9,+d+1))]));[...keypad.querySelectorAll('.key')].forEach(k=>{const v=k.dataset.key;k.classList.remove('target','near');if(digits.includes(v))k.classList.add('target');else if(near.has(v))k.classList.add('near')})}
+function renderHeatmap(){heatTitle.textContent=`🎯 ${opName()} Heatmap`;weakTitle.textContent=`Top weak ${opName().toLowerCase()} facts:`;heatmap.innerHTML='';const minA=n('minA'),maxA=n('maxA'),minB=n('minB'),maxB=n('maxB'),cols=Math.min(10,maxA-minA+1);heatmap.style.gridTemplateColumns=`26px repeat(${cols},1fr)`;function axis(v){const d=document.createElement('div');d.className='axis';d.textContent=v;return d}heatmap.appendChild(axis(''));for(let x=minA;x<=Math.min(maxA,minA+9);x++)heatmap.appendChild(axis(x));for(let y=minB;y<=Math.min(maxB,minB+9);y++){heatmap.appendChild(axis(y));for(let x=minA;x<=Math.min(maxA,minA+9);x++){const f=facts.find(q=>q.a===x&&q.b===y&&(mode==='mixed'?q.op===op:true));const l=f?label(f):'unknown',c=document.createElement('div');c.className=`cell ${l} ${x===a&&y===b?'current':''}`;c.textContent=f&&f.attempts?mark(l):'';c.title=f?`${f.a}${f.op}${f.b}=${calc(f.op,f.a,f.b)} attempts:${f.attempts} wrong:${f.wrong} avg:${f.attempts?(f.totalTime/f.attempts).toFixed(2)+'s':'n/a'}`:'';heatmap.appendChild(c)}}const weak=[...facts].filter(f=>f.attempts||f.wrong).sort((m,n)=>factScore(n)-factScore(m)).slice(0,5);weakList.innerHTML=weak.length?weak.map(f=>`<li><b>${f.a}${f.op}${f.b}</b> → ${calc(f.op,f.a,f.b)}, score ${factScore(f).toFixed(1)}, wrong ${f.wrong}, avg ${f.attempts?(f.totalTime/f.attempts).toFixed(2)+'s':'n/a'}</li>`).join(''):'<li>Practice a few facts and weak spots will appear.</li>'}
+function updateStats(){scoreEl.textContent=score;streakEl.textContent=streak;if(times.length){const avg=times.reduce((s,t)=>s+t,0)/times.length,best=Math.min(...times);avgEl.textContent=avg.toFixed(2)+'s';bestEl.textContent=best.toFixed(2)+'s'}else{avgEl.textContent='0.00s';bestEl.textContent='--'}renderHeatmap()}
 function press(k){if(k==='clear'){typed='';answerBox.textContent='?';return}if(k==='back'){typed=typed.slice(0,-1);answerBox.textContent=typed||'?';return}if(!/^\d$/.test(k))return;typed+=k;answerBox.textContent=typed;check()}
-function check(){if(typed==='')return;const correct=String(answer);if(typed===correct){const t=(performance.now()-started)/1000;score++;streak++;times.push(t);feedback.textContent=`Correct! ${t.toFixed(2)}s 🌟`;updateStats();setTimeout(newProblem,260)}else if(typed.length>=correct.length){streak=0;feedback.textContent='Try again';typed='';answerBox.textContent='?';updateStats()}}
-keypad.addEventListener('pointerdown',e=>{const btn=e.target.closest('[data-key]');if(!btn)return;e.preventDefault();press(btn.dataset.key)});
-document.addEventListener('keydown',e=>{if(/^\d$/.test(e.key))press(e.key);if(e.key==='Backspace')press('back');if(e.key==='Escape')press('clear')});
-addBtn.onclick=()=>setMode('add');multBtn.onclick=()=>setMode('mult');mixedBtn.onclick=()=>setMode('mixed');$('applyBtn').onclick=newProblem;$('newBtn').onclick=newProblem;$('resetBtn').onclick=()=>{score=0;streak=0;times=[];updateStats();newProblem()};
-updateStats();newProblem();
-</script>
-</body>
-</html>
+function check(){if(typed==='')return;const correct=String(answer);if(typed===correct){const t=(performance.now()-started)/1000,f=currentFact();if(f){f.attempts++;f.totalTime+=t;f.lastSeen=score}score++;streak++;times.push(t);feedback.textContent=`Correct! ${t.toFixed(2)}s 🌟`;updateStats();setTimeout(newProblem,260)}else if(typed.length>=correct.length){const f=currentFact();if(f)f.wrong++;streak=0;feedback.textContent='Try again';typed='';answerBox.textContent='?';card.classList.remove('shake');card.offsetHeight;card.classList.add('shake');updateStats()}}
+keypad.addEventListener('pointerdown',e=>{const btn=e.target.closest('[data-key]');if(!btn)return;e.preventDefault();press(btn.dataset.key)});document.addEventListener('keydown',e=>{if(/^\d$/.test(e.key))press(e.key);if(e.key==='Backspace')press('back');if(e.key==='Escape')press('clear')});addBtn.onclick=()=>setMode('add');multBtn.onclick=()=>setMode('mult');mixedBtn.onclick=()=>setMode('mixed');adaptiveBtn.onclick=()=>{adaptive=!adaptive;adaptiveBtn.classList.toggle('on',adaptive);adaptiveBtn.textContent=adaptive?'🎯 Adaptive ON':'🎲 Random Mode'};$('applyBtn').onclick=()=>{rebuildFacts();newProblem()};$('newBtn').onclick=newProblem;$('resetBtn').onclick=()=>{score=0;streak=0;times=[];rebuildFacts();updateStats();newProblem()};rebuildFacts();updateStats();newProblem();
+</script></body></html>

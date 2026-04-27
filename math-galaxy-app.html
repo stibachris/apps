@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Math Galaxy</title>
+  <style>
+    :root{
+      --bg0:#050816; --bg1:#0b1026; --bg2:#141947;
+      --panel:rgba(9,14,38,.78); --panel2:rgba(22,29,74,.72);
+      --line:rgba(255,255,255,.14); --text:#f8fbff; --muted:#aab6da;
+      --cyan:#52e7ff; --pink:#ff5fd7; --gold:#ffd166; --green:#5cff9d; --red:#ff5570;
+      --shadow:0 22px 80px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text); font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 18% 15%, rgba(82,231,255,.25), transparent 28%),
+        radial-gradient(circle at 78% 12%, rgba(255,95,215,.23), transparent 24%),
+        radial-gradient(circle at 50% 85%, rgba(255,209,102,.13), transparent 34%),
+        linear-gradient(135deg,var(--bg0),var(--bg1) 52%,var(--bg2));
+      overflow-x:hidden;
+    }
+    .stars,.stars:before,.stars:after{position:fixed;inset:0;content:"";pointer-events:none;background-repeat:repeat;z-index:-1}
+    .stars{background-image:radial-gradient(#fff 1px,transparent 1px);background-size:54px 54px;opacity:.28;animation:drift 42s linear infinite}
+    .stars:before{background-image:radial-gradient(#52e7ff 1px,transparent 1px);background-size:91px 91px;opacity:.25;animation:drift 65s linear infinite reverse}
+    .stars:after{background-image:radial-gradient(#ff5fd7 1px,transparent 1px);background-size:133px 133px;opacity:.17;animation:drift 85s linear infinite}
+    @keyframes drift{to{transform:translate3d(-140px,180px,0)}}
+    .wrap{width:min(1120px,100%);margin:0 auto;padding:18px;display:grid;gap:14px}
+    header,.card{border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(16px);border-radius:24px;box-shadow:var(--shadow)}
+    header{padding:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    h1{font-size:clamp(1.8rem,5vw,3.4rem);margin:0;line-height:.95;letter-spacing:-.06em}
+    h1 span{background:linear-gradient(90deg,var(--cyan),var(--pink),var(--gold));-webkit-background-clip:text;color:transparent}
+    .tag{color:var(--muted);margin-top:7px;font-weight:600}
+    .pillbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.pill{border:1px solid var(--line);background:rgba(255,255,255,.07);border-radius:999px;padding:9px 12px;font-weight:800;color:#eaf7ff}
+    .grid{display:grid;grid-template-columns:360px 1fr;gap:14px}.card{padding:16px}.settings{display:grid;gap:12px}
+    label{display:grid;gap:6px;color:var(--muted);font-size:.92rem;font-weight:700} select,input,button{font:inherit;color:var(--text);border:1px solid var(--line);background:rgba(13,20,54,.92);border-radius:15px;padding:12px 13px;outline:none} input:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 4px rgba(82,231,255,.13)}
+    button{cursor:pointer;font-weight:900;letter-spacing:.01em}.primary{border:0;background:linear-gradient(135deg,#0ea5e9,#8b5cf6,#ec4899)}.secondary{background:rgba(255,255,255,.07)}.danger{background:rgba(255,85,112,.15);border-color:rgba(255,85,112,.4)}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ops{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.ops label{display:block;color:var(--text)}.ops input{display:none}.ops span{display:block;text-align:center;border:1px solid var(--line);border-radius:14px;padding:10px;background:rgba(255,255,255,.06);font-weight:900}.ops input:checked+span{border-color:var(--cyan);background:rgba(82,231,255,.18)}
+    .stage{min-height:560px;display:grid;grid-template-rows:auto 1fr auto;gap:14px;position:relative;overflow:hidden}.ship{position:absolute;right:22px;top:78px;font-size:2rem;filter:drop-shadow(0 0 14px rgba(82,231,255,.8));animation:float 3.5s ease-in-out infinite}@keyframes float{50%{transform:translateY(-12px) rotate(5deg)}}
+    .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.stat{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:16px;padding:10px;text-align:center}.stat b{display:block;font-size:1.35rem}.stat span{font-size:.75rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+    .problemBox{display:grid;place-items:center;text-align:center;gap:12px;padding:24px}.mission{color:var(--gold);font-weight:900;text-transform:uppercase;letter-spacing:.14em}.problem{font-size:clamp(3.2rem,10vw,7.4rem);font-weight:1000;letter-spacing:-.07em;line-height:.98;text-shadow:0 0 28px rgba(82,231,255,.35)}.feedback{min-height:30px;font-size:1.2rem;font-weight:900}.good{color:var(--green)}.bad{color:var(--red)}
+    .answerRow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.answer{width:min(360px,100%);font-size:2.15rem;text-align:center;font-weight:1000}.keypad{width:min(390px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.keypad button{min-height:58px;font-size:1.45rem;background:rgba(3,8,27,.78)}
+    .progress{height:13px;background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:999px;overflow:hidden}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--pink),var(--gold));transition:width .25s ease}.history{max-height:220px;overflow:auto;display:grid;gap:7px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 10px;border-radius:13px;background:rgba(255,255,255,.06);font-weight:750}.small{font-size:.86rem;color:var(--muted)}.hidden{display:none!important}
+    @media(max-width:840px){.grid{grid-template-columns:1fr}.stage{min-height:520px}.stats{grid-template-columns:repeat(2,1fr)}.stat:last-child{grid-column:1/-1}.ship{display:none}.wrap{padding:10px}header,.card{border-radius:18px}.problem{font-size:clamp(3.2rem,17vw,5.8rem)}}
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+  <main class="wrap">
+    <header>
+      <div><h1><span>Math Galaxy</span></h1><div class="tag">Blast asteroids by answering fast. Auto-checks the moment you are correct.</div></div>
+      <div class="pillbar"><div class="pill">🚀 Arcade</div><div class="pill">📱 Android keypad</div><div class="pill">🧠 Adaptive</div></div>
+    </header>
+    <div class="grid">
+      <aside class="card settings" id="settings">
+        <button class="primary" id="startBtn">Start Mission</button>
+        <div class="two"><button class="secondary" id="pauseBtn">Pause</button><button class="danger" id="resetBtn">Reset</button></div>
+        <label>Mission mode<select id="mode"><option value="normal">Normal</option><option value="adaptive">Adaptive weak facts</option><option value="missing">Missing number</option><option value="survival">Survival timer</option></select></label>
+        <label>Operators<div class="ops"><label><input type="checkbox" value="+" checked><span>+</span></label><label><input type="checkbox" value="-" checked><span>−</span></label><label><input type="checkbox" value="*" checked><span>×</span></label><label><input type="checkbox" value="/" checked><span>÷</span></label></div></label>
+        <div class="two"><label>Min<input id="minNum" type="number" value="1" inputmode="numeric"></label><label>Max<input id="maxNum" type="number" value="12" inputmode="numeric"></label></div>
+        <div class="two"><label>Terms<select id="terms"><option>2</option><option>3</option><option>4</option></select></label><label>Problems<input id="goal" type="number" value="30" inputmode="numeric"></label></div>
+        <div class="two"><label>Timer seconds<input id="seconds" type="number" value="90" inputmode="numeric"></label><label>Big font<select id="bigFont"><option value="yes">Yes</option><option value="no">No</option></select></label></div>
+        <button class="secondary" id="toggleSettings">Hide Settings</button>
+        <section><h3>Flight Log</h3><div class="history" id="history"></div></section>
+      </aside>
+      <section class="card stage">
+        <div class="ship">🛸</div>
+        <div class="stats"><div class="stat"><b id="score">0</b><span>Score</span></div><div class="stat"><b id="accuracy">0%</b><span>Accuracy</span></div><div class="stat"><b id="streak">0</b><span>Streak</span></div><div class="stat"><b id="avg">0.00s</b><span>Avg</span></div><div class="stat"><b id="timer">90</b><span>Time</span></div></div>
+        <div class="problemBox"><div class="mission" id="mission">Ready on launch pad</div><div class="problem" id="problem">🚀</div><div class="feedback" id="feedback"></div><div class="progress"><div class="bar" id="bar"></div></div></div>
+        <div><div class="answerRow"><input class="answer" id="answer" placeholder="answer" autocomplete="off" inputmode="none"><button class="secondary" id="skipBtn">Skip</button></div><div class="keypad" id="keypad"><button>7</button><button>8</button><button>9</button><button>4</button><button>5</button><button>6</button><button>1</button><button>2</button><button>3</button><button>-</button><button>0</button><button data-action="back">⌫</button></div></div>
+      </section>
+    </div>
+  </main>
+<script>
+const $=id=>document.getElementById(id);
+const state={running:false,paused:false,answer:null,display:'',startedAt:0,score:0,attempts:0,streak:0,totalMs:0,history:[],weak:new Map(),timeLeft:90,tick:null};
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function ops(){const picked=[...document.querySelectorAll('.ops input:checked')].map(x=>x.value);return picked.length?picked:['+']}
+function opSymbol(o){return o==='*'?'×':o==='/'?'÷':o==='-'?'−':o}
+function chosenOp(){const o=ops();return o[rand(0,o.length-1)]}
+function compute(nums,op){let a=nums[0];for(let i=1;i<nums.length;i++){if(op==='+')a+=nums[i];if(op==='-')a-=nums[i];if(op==='*')a*=nums[i];if(op==='/')a/=nums[i]}return a}
+function makeProblem(){
+ if(!state.running||state.paused)return;
+ const min=Number($('minNum').value||1), max=Number($('maxNum').value||12), termCount=Number($('terms').value||2);
+ let op=chosenOp(), nums=Array.from({length:termCount},()=>rand(min,max));
+ if(op==='/'){const b=rand(Math.max(1,min),Math.max(1,max));const q=rand(min,max);nums=[b*q,b]}
+ if(op==='-')nums=nums.sort((a,b)=>b-a);
+ if($('mode').value==='adaptive'&&state.weak.size&&Math.random()<.45){const worst=[...state.weak.entries()].sort((a,b)=>b[1]-a[1])[0][0];const saved=JSON.parse(worst);nums=saved.nums;op=saved.op}
+ let answer=compute(nums,op), text=nums.join(' '+opSymbol(op)+' ');
+ if($('mode').value==='missing'&&nums.length===2){const ans=answer, hideFirst=Math.random()<.5;text=hideFirst?`? ${opSymbol(op)} ${nums[1]} = ${ans}`:`${nums[0]} ${opSymbol(op)} ? = ${ans}`;answer=hideFirst?nums[0]:nums[1]}
+ state.answer=Number.isInteger(answer)?answer:Number(answer.toFixed(2)); state.display=text; state.key=JSON.stringify({nums,op}); state.startedAt=performance.now();
+ $('problem').textContent=text; $('answer').value=''; $('feedback').textContent=''; $('mission').textContent='Destroy the asteroid'; $('answer').focus();
+}
+function start(){clearInterval(state.tick);Object.assign(state,{running:true,paused:false,answer:null,score:0,attempts:0,streak:0,totalMs:0,history:[],timeLeft:Number($('seconds').value||90)});render();makeProblem();state.tick=setInterval(()=>{if(!state.running||state.paused)return;state.timeLeft--;render();if($('mode').value==='survival'&&state.timeLeft<=0)end('Mission complete')},1000)}
+function end(msg){state.running=false;clearInterval(state.tick);$('problem').textContent='🌌';$('mission').textContent=msg;$('feedback').textContent=`Score ${state.score} with ${accuracy()} accuracy`;}
+function accuracy(){return state.attempts?Math.round((state.score/state.attempts)*100)+'%':'0%'}
+function record(ok,given){if(!state.running||state.paused||state.answer===null)return;const ms=performance.now()-state.startedAt;state.attempts++;if(ok){state.score++;state.streak++;state.totalMs+=ms;$('feedback').className='feedback good';$('feedback').textContent='Direct hit! ✨';}else{state.streak=0;state.weak.set(state.key,(state.weak.get(state.key)||0)+1);$('feedback').className='feedback bad';$('feedback').textContent='Missed asteroid';}
+ state.history.unshift({p:state.display,a:state.answer,g:given,ok,ms});state.history=state.history.slice(0,24);render();const goal=Number($('goal').value||30);if(state.attempts>=goal)end('Galaxy cleared');else setTimeout(makeProblem, ok?120:450)}
+function render(){ $('score').textContent=state.score; $('accuracy').textContent=accuracy(); $('streak').textContent=state.streak; $('avg').textContent=state.score?(state.totalMs/state.score/1000).toFixed(2)+'s':'0.00s'; $('timer').textContent=state.timeLeft; $('bar').style.width=Math.min(100,(state.attempts/Number($('goal').value||30))*100)+'%'; $('history').innerHTML=state.history.map(h=>`<div class="row"><span>${h.p} = ${h.a}</span><span class="${h.ok?'good':'bad'}">${h.ok?'✓':'✗'} ${(h.ms/1000).toFixed(2)}s</span></div>`).join('')||'<div class="small">No problems yet.</div>';}
+$('startBtn').onclick=start;$('resetBtn').onclick=start;$('pauseBtn').onclick=()=>{state.paused=!state.paused;$('pauseBtn').textContent=state.paused?'Resume':'Pause';if(!state.paused){state.startedAt=performance.now();$('answer').focus()}};$('skipBtn').onclick=()=>record(false,$('answer').value||'skip');
+$('answer').addEventListener('input',e=>{const v=e.target.value.trim();if(v!==''&&Number(v)===state.answer)record(true,v)});
+$('answer').addEventListener('keydown',e=>{if(e.key==='Enter')record(Number($('answer').value)===state.answer,$('answer').value)});
+$('keypad').onclick=e=>{if(e.target.tagName!=='BUTTON')return;const input=$('answer');input.value=e.target.dataset.action==='back'?input.value.slice(0,-1):input.value+e.target.textContent;input.dispatchEvent(new Event('input'));input.focus()};
+$('toggleSettings').onclick=()=>{$('settings').classList.toggle('hidden');$('toggleSettings').textContent=$('settings').classList.contains('hidden')?'Show Settings':'Hide Settings'};
+$('bigFont').onchange=()=>{$('problem').style.fontSize=$('bigFont').value==='yes'?'clamp(3.2rem,10vw,7.4rem)':'clamp(2.2rem,7vw,4.8rem)'};render();
+</script>
+</body>
+</html>

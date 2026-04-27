@@ -1,14 +1,156 @@
-<!-- updated -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Galaxy Math Trainer</title>
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui;
+  background:#060014;
+  color:white;
+  text-align:center;
+}
+
+.panel{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+
+.problem{
+  font-size:4rem;
+  margin:20px 0;
+}
+
+.answer{
+  font-size:2rem;
+  margin:10px;
+}
+
+.keypad{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  max-width:300px;
+  margin:auto;
+}
+
+button{
+  padding:15px;
+  font-size:1.5rem;
+  border-radius:10px;
+  border:none;
+}
+
+.heatmap{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:5px;
+}
+
+.cell{
+  padding:10px;
+  border:1px solid white;
+}
+</style>
 </head>
+
 <body>
+
+<div class="panel">
+
+<h1>Galaxy Math 🚀</h1>
+
+<div id="problem" class="problem">10 + 10</div>
+<div id="answer" class="answer">?</div>
+
+<div class="keypad">
+<button onclick="press(1)">1</button>
+<button onclick="press(2)">2</button>
+<button onclick="press(3)">3</button>
+<button onclick="press(4)">4</button>
+<button onclick="press(5)">5</button>
+<button onclick="press(6)">6</button>
+<button onclick="press(7)">7</button>
+<button onclick="press(8)">8</button>
+<button onclick="press(9)">9</button>
+<button onclick="back()">⌫</button>
+<button onclick="press(0)">0</button>
+<button onclick="clearAns()">C</button>
+</div>
+
+<div id="stats"></div>
+<div class="heatmap" id="heatmap"></div>
+
+</div>
+
 <script>
-// file unchanged except timestamp update
+let a,b,answer;
+let typed="";
+let stats={};
+
+function newProblem(){
+  a=Math.floor(Math.random()*90)+10;
+  b=Math.floor(Math.random()*90)+10;
+  answer=a+b;
+
+  document.getElementById("problem").innerText=a+" + "+b;
+  typed="";
+  updateDisplay();
+}
+
+function updateDisplay(){
+  document.getElementById("answer").innerText=typed || "?";
+}
+
+function press(n){
+  typed+=n;
+  updateDisplay();
+  check();
+}
+
+function back(){
+  typed=typed.slice(0,-1);
+  updateDisplay();
+}
+
+function clearAns(){
+  typed="";
+  updateDisplay();
+}
+
+function check(){
+  if(Number(typed)===answer){
+    track();
+    newProblem();
+  }
+}
+
+function track(){
+  let key=a+"+"+b;
+  if(!stats[key]) stats[key]={count:0};
+  stats[key].count++;
+  renderHeatmap();
+}
+
+function renderHeatmap(){
+  let el=document.getElementById("heatmap");
+  el.innerHTML="";
+
+  Object.keys(stats).slice(0,20).forEach(k=>{
+    let div=document.createElement("div");
+    div.className="cell";
+    div.innerText=k;
+    el.appendChild(div);
+  });
+}
+
+newProblem();
 </script>
+
 </body>
 </html>
